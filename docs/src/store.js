@@ -17,7 +17,7 @@ const store = reactive({
             } catch (e) {
                 console.warn('Backend API unavailable, attempting to load static data...');
                 useStatic = true;
-                res = await fetch('data/products.json');
+                res = await fetch('./data/products.json');
             }
 
             if (res.ok) {

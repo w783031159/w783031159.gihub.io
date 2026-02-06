@@ -4,6 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShoeShow - Premium Footwear</title>
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var div = document.createElement('div');
+            div.style.position = 'fixed';
+            div.style.top = '0';
+            div.style.left = '0';
+            div.style.width = '100%';
+            div.style.backgroundColor = 'red';
+            div.style.color = 'white';
+            div.style.padding = '20px';
+            div.style.zIndex = '9999';
+            div.innerText = 'Error: ' + msg + '\nURL: ' + url + '\nLine: ' + line;
+            document.body.appendChild(div);
+            return false;
+        };
+        window.addEventListener('unhandledrejection', function(event) {
+            var div = document.createElement('div');
+            div.style.position = 'fixed';
+            div.style.bottom = '0';
+            div.style.left = '0';
+            div.style.width = '100%';
+            div.style.backgroundColor = 'orange';
+            div.style.color = 'white';
+            div.style.padding = '20px';
+            div.style.zIndex = '9999';
+            div.innerText = 'Promise Error: ' + event.reason;
+            document.body.appendChild(div);
+        });
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
