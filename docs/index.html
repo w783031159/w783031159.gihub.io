@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoeShow - Premium Footwear</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1f2937',
+                        secondary: '#4b5563',
+                        accent: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [v-cloak] { display: none; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <div id="app" v-cloak>
+        <navbar></navbar>
+        <main class="min-h-screen pt-16">
+            <router-view v-slot="{ Component }">
+                <transition name="fade" mode="out-in">
+                    <component :is="Component" />
+                </transition>
+            </router-view>
+        </main>
+    </div>
+
+    <!-- Import Map for clean imports -->
+    <script type="importmap">
+    {
+        "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+            "vue-router": "https://unpkg.com/vue-router@4/dist/vue-router.esm-browser.js",
+            "@vue/devtools-api": "https://unpkg.com/@vue/devtools-api@6/lib/esm/index.js"
+        }
+    }
+    </script>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
