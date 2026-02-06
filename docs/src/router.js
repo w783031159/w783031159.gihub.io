@@ -6,7 +6,7 @@ import Admin from './views/Admin.js';
 const routes = [
     { path: '/', component: Home },
     { path: '/product/:id', component: ProductDetail },
-    { path: '/admin', component: Admin },
+    { path: '/wengjiabao', component: Admin },
 ];
 
 const router = createRouter({
