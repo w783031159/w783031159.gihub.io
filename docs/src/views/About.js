@@ -56,7 +56,7 @@ export default {
                         <div class="w-full h-64 sm:h-80 bg-gray-100 overflow-hidden">
                             <iframe
                                 class="w-full h-full border-0"
-                                src="https://www.openstreetmap.org/export/embed.html?bbox=118.53%2C24.77%2C118.59%2C24.83&layer=mapnik&marker=24.80%2C118.56"
+                                src="https://www.google.com/maps?q=Room%20304%2C%20Building%206%2C%20Xunxing%20Hualin%20Spring%20(Phase%201)%2C%20Chendai%20Town%2C%20Jinjiang%20City%2C%20Quanzhou%2C%20Fujian%20Province%2C%20China%2C%20362200&output=embed&hl=en"
                                 loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade"
                             ></iframe>
