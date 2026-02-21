@@ -170,7 +170,7 @@ export default {
                         <button
                             v-if="materialsItems.length > 1"
                             type="button"
-                            class="absolute top-1/2 -translate-y-1/2 -left-10 md:-left-16 flex items-center justify-center text-gray-400 hover:text-black"
+                            class="absolute top-32 -left-10 md:-left-16 flex items-center justify-center text-gray-400 hover:text-black"
                             @click="prevMaterials"
                         >
                             <span class="sr-only">Previous material</span>
@@ -181,7 +181,7 @@ export default {
                         <button
                             v-if="materialsItems.length > 1"
                             type="button"
-                            class="absolute top-1/2 -translate-y-1/2 -right-10 md:-right-16 flex items-center justify-center text-gray-400 hover:text-black"
+                            class="absolute top-32 -right-10 md:-right-16 flex items-center justify-center text-gray-400 hover:text-black"
                             @click="nextMaterials"
                         >
                             <span class="sr-only">Next material</span>

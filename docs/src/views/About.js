@@ -45,9 +45,10 @@ export default {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                         <div class="space-y-3 text-sm text-gray-600">
                             <p>Company Name: K&amp;J Trading Co., Ltd</p>
-                            <p>Address: Room 304, Bldg 6, Xunxing Hualin Spring, Chendai Town, Jinjiang City, Fujian, China.</p>
-                            <p>Industry: Professional Footwear Sourcing &amp; Supply Chain Specialist.</p>
-                            <p>Core Competency: Sourcing and manufacturing Safety, Athletic and Lifestyle footwear with strict Quality Control.</p>
+                            <p>Address: Room 304, Building 6, Xunxing Hualin Spring (Phase 1), Chendai Town, Jinjiang City, Quanzhou, Fujian Province, China. 362200.</p>
+                            <p>Email: <a href="mailto:info@k-jtrade.com" class="text-indigo-600 hover:underline">info@k-jtrade.com</a></p>
+                            <p>Phone/WhatsApp: <a href="tel:+8613073820413" class="text-indigo-600 hover:underline">+86 13073820413</a></p>
+                            <p>Website: <a href="https://www.k-jtrade.com" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">www.k-jtrade.com</a></p>
                             <p class="mt-4 text-gray-500">
                                 For sourcing inquiries, factory visits or sampling, please contact us in advance to schedule an appointment. We are happy to arrange on-site factory tours and product presentations in Jinjiang.
                             </p>

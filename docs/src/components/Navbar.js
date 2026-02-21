@@ -11,20 +11,25 @@ export default {
                         </router-link>
                     </div>
                     <div class="hidden sm:flex sm:items-center sm:space-x-10">
-                        <router-link
-                            to="/"
-                            class="text-gray-500 hover:text-black px-1 py-2 text-xs font-semibold uppercase tracking-widest transition-colors duration-300"
-                            active-class="text-black"
-                            exact
-                        >
-                            Home
+                        <router-link to="/" v-slot="{ href, navigate, isExactActive }">
+                            <a
+                                :href="href"
+                                @click="navigate"
+                                class="px-1 py-2 font-semibold uppercase tracking-widest transition-colors duration-300"
+                                :class="isExactActive ? 'text-black text-lg sm:text-xl' : 'text-gray-400 text-xs'"
+                            >
+                                Home
+                            </a>
                         </router-link>
-                        <router-link
-                            to="/about"
-                            class="text-gray-400 hover:text-black px-1 py-2 text-xs font-semibold uppercase tracking-widest transition-colors duration-300"
-                            active-class="text-black"
-                        >
-                            About Us
+                        <router-link to="/about" v-slot="{ href, navigate, isActive }">
+                            <a
+                                :href="href"
+                                @click="navigate"
+                                class="px-1 py-2 font-semibold uppercase tracking-widest transition-colors duration-300"
+                                :class="isActive ? 'text-black text-lg sm:text-xl' : 'text-gray-400 text-xs'"
+                            >
+                                About Us
+                            </a>
                         </router-link>
                     </div>
                 </div>

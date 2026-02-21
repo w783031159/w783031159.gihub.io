@@ -49,8 +49,19 @@ export default {
 
             <div class="mt-10 space-y-8">
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Homepage Visuals</h2>
-                    <p class="text-sm text-gray-500 mb-6">Manage the images shown in the Factory and Materials sections on the home page.</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-900">Homepage Visuals</h2>
+                            <p class="text-sm text-gray-500">Manage the images shown in the Factory and Materials sections on the home page.</p>
+                        </div>
+                        <button
+                            type="button"
+                            @click="saveHomeVisuals"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+                        >
+                            保存工厂和材质
+                        </button>
+                    </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="bg-white shadow sm:rounded-lg p-4">
@@ -268,6 +279,7 @@ export default {
             sizes: ['38', '39', '40', '41', '42'] // Default sizes
         });
         const sizesInput = ref('38,39,40,41,42');
+        const savingHomeVisuals = ref(false);
 
         onMounted(() => {
             store.fetchProducts();
@@ -372,6 +384,23 @@ export default {
             closeForm();
         };
 
+        const saveHomeVisuals = async () => {
+            if (store.demoMode) {
+                alert('当前是静态预览模式，无法保存到服务器。');
+                return;
+            }
+            if (savingHomeVisuals.value) return;
+            savingHomeVisuals.value = true;
+            try {
+                await store.saveHomeVisuals();
+                alert('工厂和材质配置已保存到 products.json');
+            } catch (e) {
+                console.error(e);
+            } finally {
+                savingHomeVisuals.value = false;
+            }
+        };
+
         const addFactoryImage = () => {
             store.factoryImages.push({
                 src: '',
@@ -432,6 +461,7 @@ export default {
             isEditing,
             form,
             sizesInput,
+            savingHomeVisuals,
             openForm,
             closeForm,
             editProduct,
@@ -440,6 +470,7 @@ export default {
             handleFileUpload,
             removeImage,
             submitForm,
+            saveHomeVisuals,
             addFactoryImage,
             removeFactoryImage,
             addMaterialsItem,

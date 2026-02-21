@@ -67,24 +67,45 @@ const store = reactive({
 
             if (res.ok) {
                 let data = await res.json();
-                
-                if (useStatic) {
-                    data = data.map(p => {
-                        if (p.images) {
-                            p.images = p.images.map(img => {
-                                if (img.startsWith('/uploads')) {
-                                    return 'data' + img;
-                                }
-                                return img;
-                            });
+
+                if (Array.isArray(data)) {
+                    const productsArray = [];
+                    let factoryItems = null;
+                    let materialsItems = null;
+
+                    for (const entry of data) {
+                        if (entry && entry.type === 'factory' && Array.isArray(entry.items)) {
+                            factoryItems = entry.items;
+                        } else if (entry && entry.type === 'materials' && Array.isArray(entry.items)) {
+                            materialsItems = entry.items;
+                        } else {
+                            productsArray.push(entry);
                         }
-                        return p;
-                    });
+                    }
+
+                    if (useStatic) {
+                        for (const p of productsArray) {
+                            if (p.images) {
+                                p.images = p.images.map(img => {
+                                    if (typeof img === 'string' && img.startsWith('/uploads')) {
+                                        return 'data' + img;
+                                    }
+                                    return img;
+                                });
+                            }
+                        }
+                    }
+
+                    this.products = productsArray;
+                    this.factoryImages = factoryItems && factoryItems.length > 0 ? factoryItems : defaultFactoryImages;
+                    this.materialsItems = materialsItems && materialsItems.length > 0 ? materialsItems : defaultMaterialsItems;
+                } else {
+                    this.products = [];
+                    this.factoryImages = defaultFactoryImages;
+                    this.materialsItems = defaultMaterialsItems;
                 }
 
                 this.demoMode = useStatic;
-
-                this.products = data;
             } else {
                 this.error = 'Failed to load products';
             }
@@ -170,6 +191,30 @@ const store = reactive({
             }
         } catch (e) {
             alert('Operation failed: Backend server is not available in this demo.');
+        }
+    },
+
+    async saveHomeVisuals() {
+        if (this.demoMode) {
+            alert('当前是静态预览模式，无法保存到服务器。');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/home-config', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    factoryImages: this.factoryImages,
+                    materialsItems: this.materialsItems
+                })
+            });
+            if (!res.ok) {
+                throw new Error('Failed to save home config');
+            }
+        } catch (e) {
+            alert('保存工厂和材质配置失败：后端服务不可用。');
+            throw e;
         }
     }
 });
