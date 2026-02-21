@@ -1,9 +1,77 @@
 import { reactive, watch } from 'vue';
 
+const defaultFactoryImages = [
+    {
+        src: 'https://images.pexels.com/photos/4484078/pexels-photo-4484078.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        alt: 'Shoe factory production line'
+    },
+    {
+        src: 'https://images.pexels.com/photos/4484077/pexels-photo-4484077.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        alt: 'Quality inspection'
+    },
+    {
+        src: 'https://images.pexels.com/photos/3738087/pexels-photo-3738087.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        alt: 'Packing and shipping'
+    }
+];
+
+const defaultMaterialsItems = [
+    {
+        image: 'https://images.pexels.com/photos/5045920/pexels-photo-5045920.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        alt: 'Upper materials',
+        label: 'Upper',
+        description: 'Mesh, knit, leather and more upper constructions for different design directions.'
+    },
+    {
+        image: 'https://images.pexels.com/photos/7480112/pexels-photo-7480112.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        alt: 'Outsole materials',
+        label: 'Outsole',
+        description: 'EVA, rubber and compound outsoles balancing durability, cushioning and lightness.'
+    },
+    {
+        image: 'https://images.pexels.com/photos/7439459/pexels-photo-7439459.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        alt: 'Paper shoe inserts',
+        label: 'Inserts',
+        description: 'Paper shoe inserts to improve presentation for e-commerce and in-store display.'
+    },
+    {
+        image: 'https://images.pexels.com/photos/3738086/pexels-photo-3738086.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        alt: 'Studded uppers',
+        label: 'Studded Uppers',
+        description: 'Studs and decorative uppers suitable for bold, statement-making women’s footwear.'
+    }
+];
+
+let initialFactoryImages = defaultFactoryImages;
+let initialMaterialsItems = defaultMaterialsItems;
+
+if (typeof window !== 'undefined') {
+    try {
+        const savedFactory = window.localStorage.getItem('factoryImages');
+        if (savedFactory) {
+            initialFactoryImages = JSON.parse(savedFactory);
+        }
+    } catch (e) {
+        
+    }
+
+    try {
+        const savedMaterials = window.localStorage.getItem('materialsItems');
+        if (savedMaterials) {
+            initialMaterialsItems = JSON.parse(savedMaterials);
+        }
+    } catch (e) {
+        
+    }
+}
+
 const store = reactive({
     products: [],
     loading: false,
     error: null,
+    demoMode: false,
+    factoryImages: initialFactoryImages,
+    materialsItems: initialMaterialsItems,
     
     async fetchProducts() {
         this.loading = true;
@@ -23,13 +91,12 @@ const store = reactive({
             if (res.ok) {
                 let data = await res.json();
                 
-                // Fix image paths if running in static mode (GitHub Pages)
                 if (useStatic) {
                     data = data.map(p => {
                         if (p.images) {
                             p.images = p.images.map(img => {
                                 if (img.startsWith('/uploads')) {
-                                    return 'data' + img; // Convert /uploads/x to data/uploads/x (relative)
+                                    return 'data' + img;
                                 }
                                 return img;
                             });
@@ -37,6 +104,8 @@ const store = reactive({
                         return p;
                     });
                 }
+
+                this.demoMode = useStatic;
 
                 this.products = data;
             } else {
@@ -50,6 +119,15 @@ const store = reactive({
     },
 
     async addProduct(product) {
+        if (this.demoMode) {
+            const newProduct = {
+                ...product,
+                id: product.id || String(Date.now())
+            };
+            this.products.push(newProduct);
+            return newProduct;
+        }
+
         try {
             const res = await fetch('/api/products', {
                 method: 'POST',
@@ -69,6 +147,15 @@ const store = reactive({
     },
 
     async updateProduct(id, updates) {
+        if (this.demoMode) {
+            const targetId = String(id);
+            const idx = this.products.findIndex(p => String(p.id) === targetId);
+            if (idx !== -1) {
+                Object.assign(this.products[idx], updates);
+            }
+            return;
+        }
+
         try {
             const res = await fetch(`/api/products/${id}`, {
                 method: 'PUT',
@@ -89,6 +176,12 @@ const store = reactive({
     },
 
     async deleteProduct(id) {
+        if (this.demoMode) {
+            const targetId = String(id);
+            this.products = this.products.filter(p => String(p.id) !== targetId);
+            return;
+        }
+
         try {
             const res = await fetch(`/api/products/${id}`, {
                 method: 'DELETE'
@@ -103,5 +196,31 @@ const store = reactive({
         }
     }
 });
+
+if (typeof window !== 'undefined') {
+    watch(
+        () => store.factoryImages,
+        (val) => {
+            try {
+                window.localStorage.setItem('factoryImages', JSON.stringify(val));
+            } catch (e) {
+                
+            }
+        },
+        { deep: true }
+    );
+
+    watch(
+        () => store.materialsItems,
+        (val) => {
+            try {
+                window.localStorage.setItem('materialsItems', JSON.stringify(val));
+            } catch (e) {
+                
+            }
+        },
+        { deep: true }
+    );
+}
 
 export default store;

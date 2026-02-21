@@ -53,36 +53,12 @@ export default {
                     <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
                         <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">{{ product.name }}</h1>
 
-                        <div class="mt-3">
-                            <h2 class="sr-only">Product information</h2>
-                            <p class="text-3xl text-gray-900">$ {{ product.price }}</p>
-                        </div>
-
                         <!-- Description -->
                         <div class="mt-6">
                             <h3 class="sr-only">Description</h3>
                             <div class="text-base text-gray-700 space-y-6" v-html="product.description"></div>
                         </div>
                         
-                        <!-- Features Icons -->
-                        <div class="mt-8 border-t border-gray-200 pt-8">
-                            <h3 class="text-sm font-medium text-gray-900">Features</h3>
-                            <div class="mt-4 grid grid-cols-2 gap-4">
-                                <div class="flex items-center">
-                                    <svg class="h-6 w-6 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm text-gray-500">Premium Materials</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <svg class="h-6 w-6 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
-                                    <span class="text-sm text-gray-500">Lightweight</span>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Attributes Table -->
                         <div class="mt-8 border-t border-gray-200 pt-8">
                             <h3 class="text-sm font-medium text-gray-900 mb-4">Specifications</h3>

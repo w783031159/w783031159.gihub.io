@@ -18,7 +18,6 @@ export default {
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -35,14 +34,150 @@ export default {
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ product.brand }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$ {{ product.price }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button @click="editProduct(product)" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-4">
+                                <button @click="editProduct(product)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                                <button @click="copyProduct(product)" class="text-gray-600 hover:text-gray-900">Copy</button>
                                 <button @click="deleteProduct(product.id)" class="text-red-600 hover:text-red-900">Delete</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="mt-10 space-y-8">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Homepage Visuals</h2>
+                    <p class="text-sm text-gray-500 mb-6">Manage the images shown in the Factory and Materials sections on the home page.</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white shadow sm:rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">Factory Images</h3>
+                                <button
+                                    type="button"
+                                    @click="addFactoryImage"
+                                    class="text-sm text-indigo-600 hover:text-indigo-800"
+                                >
+                                    Add Image
+                                </button>
+                            </div>
+                            <div class="space-y-3">
+                                <div
+                                    v-for="(img, idx) in store.factoryImages"
+                                    :key="idx"
+                                    class="flex flex-col space-y-2 border border-gray-100 rounded-md p-3"
+                                >
+                                    <div class="flex items-center space-x-3">
+                                        <div class="h-16 w-16 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                                            <img v-if="img.src" :src="img.src" class="h-full w-full object-cover" alt="">
+                                        </div>
+                                        <div class="flex-1 space-y-1">
+                                            <input
+                                                v-model="img.src"
+                                                type="text"
+                                                placeholder="Image URL or leave blank when using upload"
+                                                class="block w-full border border-gray-300 rounded-md shadow-sm p-1.5 text-xs"
+                                            >
+                                            <input
+                                                v-model="img.alt"
+                                                type="text"
+                                                placeholder="Alt text"
+                                                class="block w-full border border-gray-300 rounded-md shadow-sm p-1.5 text-xs"
+                                            >
+                                            <div class="flex items-center space-x-2">
+                                                <label class="inline-flex items-center px-2 py-1 border border-gray-300 rounded-md text-[11px] text-gray-600 cursor-pointer bg-white hover:bg-gray-50">
+                                                    <span>Upload</span>
+                                                    <input type="file" accept="image/*" class="sr-only" @change="onFactoryFileChange(idx, $event)">
+                                                </label>
+                                                <span class="text-[10px] text-gray-400">Choose local image file</span>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            @click="removeFactoryImage(idx)"
+                                            class="text-xs text-red-600 hover:text-red-800"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                                <p v-if="store.factoryImages.length === 0" class="text-xs text-gray-400">
+                                    No factory images configured yet.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white shadow sm:rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">Materials Items</h3>
+                                <button
+                                    type="button"
+                                    @click="addMaterialsItem"
+                                    class="text-sm text-indigo-600 hover:text-indigo-800"
+                                >
+                                    Add Item
+                                </button>
+                            </div>
+                            <div class="space-y-3">
+                                <div
+                                    v-for="(item, idx) in store.materialsItems"
+                                    :key="idx"
+                                    class="border border-gray-100 rounded-md p-3 space-y-2"
+                                >
+                                    <div class="grid grid-cols-1 gap-2">
+                                        <div class="space-y-1">
+                                            <input
+                                                v-model="item.image"
+                                                type="text"
+                                                placeholder="Image URL or leave blank when using upload"
+                                                class="block w-full border border-gray-300 rounded-md shadow-sm p-1.5 text-xs"
+                                            >
+                                            <div class="flex items-center space-x-2">
+                                                <label class="inline-flex items-center px-2 py-1 border border-gray-300 rounded-md text-[11px] text-gray-600 cursor-pointer bg-white hover:bg-gray-50">
+                                                    <span>Upload</span>
+                                                    <input type="file" accept="image/*" class="sr-only" @change="onMaterialsFileChange(idx, $event)">
+                                                </label>
+                                                <span class="text-[10px] text-gray-400">Choose local image file</span>
+                                            </div>
+                                        </div>
+                                        <input
+                                            v-model="item.alt"
+                                            type="text"
+                                            placeholder="Alt text"
+                                            class="block w-full border border-gray-300 rounded-md shadow-sm p-1.5 text-xs"
+                                        >
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            <input
+                                                v-model="item.label"
+                                                type="text"
+                                                placeholder="Label"
+                                                class="block w-full border border-gray-300 rounded-md shadow-sm p-1.5 text-xs"
+                                            >
+                                            <input
+                                                v-model="item.description"
+                                                type="text"
+                                                placeholder="Description"
+                                                class="block w-full border border-gray-300 rounded-md shadow-sm p-1.5 text-xs"
+                                            >
+                                        </div>
+                                        <div class="flex justify-end">
+                                            <button
+                                                type="button"
+                                                @click="removeMaterialsItem(idx)"
+                                                class="text-xs text-red-600 hover:text-red-800"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p v-if="store.materialsItems.length === 0" class="text-xs text-gray-400">
+                                    No materials items configured yet.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Form Modal -->
@@ -64,15 +199,10 @@ export default {
                                     <label class="block text-sm font-medium text-gray-700">Brand</label>
                                     <input v-model="form.brand" type="text" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
                                 </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700">Price</label>
-                                        <input v-model.number="form.price" type="number" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700">Original Price</label>
-                                        <input v-model.number="form.originalPrice" type="number" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
-                                    </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Sizes</label>
+                                    <input v-model="sizesInput" type="text" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="38,39,40,41,42">
+                                    <p class="mt-1 text-xs text-gray-400">用逗号分隔多个尺码，例如：38,39,40,41,42</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Description</label>
@@ -134,6 +264,7 @@ export default {
             images: [],
             sizes: ['38', '39', '40', '41', '42'] // Default sizes
         });
+        const sizesInput = ref('38,39,40,41,42');
 
         onMounted(() => {
             store.fetchProducts();
@@ -158,6 +289,7 @@ export default {
             form.description = '';
             form.images = [];
             form.sizes = ['38', '39', '40', '41', '42'];
+            sizesInput.value = '38,39,40,41,42';
         };
 
         const editProduct = (product) => {
@@ -169,6 +301,7 @@ export default {
             form.description = product.description;
             form.images = [...(product.images || [])];
             form.sizes = product.sizes || ['38', '39', '40', '41', '42'];
+            sizesInput.value = (form.sizes || []).join(',');
             isEditing.value = true;
             showForm.value = true;
         };
@@ -177,6 +310,14 @@ export default {
             if (confirm('Are you sure?')) {
                 await store.deleteProduct(id);
             }
+        };
+
+        const copyProduct = async (product) => {
+            const cloned = {
+                ...product
+            };
+            delete cloned.id;
+            await store.addProduct(cloned);
         };
 
         const handleFileUpload = (event) => {
@@ -213,6 +354,11 @@ export default {
         };
 
         const submitForm = async () => {
+            const parsedSizes = sizesInput.value
+                .split(',')
+                .map(s => s.trim())
+                .filter(Boolean);
+            form.sizes = parsedSizes.length > 0 ? parsedSizes : ['38', '39', '40', '41', '42'];
             const productData = { ...form };
             if (isEditing.value) {
                 await store.updateProduct(form.id, productData);
@@ -223,18 +369,80 @@ export default {
             closeForm();
         };
 
+        const addFactoryImage = () => {
+            store.factoryImages.push({
+                src: '',
+                alt: ''
+            });
+        };
+
+        const removeFactoryImage = (index) => {
+            store.factoryImages.splice(index, 1);
+        };
+
+        const onFactoryFileChange = (index, event) => {
+            const files = event.target.files;
+            if (!files || !files[0]) return;
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target.result;
+                if (!result) return;
+                if (!store.factoryImages[index]) return;
+                store.factoryImages[index].src = result;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        };
+
+        const addMaterialsItem = () => {
+            store.materialsItems.push({
+                image: '',
+                alt: '',
+                label: '',
+                description: ''
+            });
+        };
+
+        const removeMaterialsItem = (index) => {
+            store.materialsItems.splice(index, 1);
+        };
+
+        const onMaterialsFileChange = (index, event) => {
+            const files = event.target.files;
+            if (!files || !files[0]) return;
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target.result;
+                if (!result) return;
+                if (!store.materialsItems[index]) return;
+                store.materialsItems[index].image = result;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        };
+
         return {
             store,
             showForm,
             isEditing,
             form,
+            sizesInput,
             openForm,
             closeForm,
             editProduct,
             deleteProduct,
+            copyProduct,
             handleFileUpload,
             removeImage,
-            submitForm
+            submitForm,
+            addFactoryImage,
+            removeFactoryImage,
+            addMaterialsItem,
+            removeMaterialsItem,
+            onFactoryFileChange,
+            onMaterialsFileChange
         };
     }
 }
