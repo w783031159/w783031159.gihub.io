@@ -1,4 +1,4 @@
-import { reactive, watch } from 'vue';
+import { reactive } from 'vue';
 
 const defaultFactoryImages = [
     {
@@ -42,36 +42,13 @@ const defaultMaterialsItems = [
     }
 ];
 
-let initialFactoryImages = defaultFactoryImages;
-let initialMaterialsItems = defaultMaterialsItems;
-
-if (typeof window !== 'undefined') {
-    try {
-        const savedFactory = window.localStorage.getItem('factoryImages');
-        if (savedFactory) {
-            initialFactoryImages = JSON.parse(savedFactory);
-        }
-    } catch (e) {
-        
-    }
-
-    try {
-        const savedMaterials = window.localStorage.getItem('materialsItems');
-        if (savedMaterials) {
-            initialMaterialsItems = JSON.parse(savedMaterials);
-        }
-    } catch (e) {
-        
-    }
-}
-
 const store = reactive({
     products: [],
     loading: false,
     error: null,
     demoMode: false,
-    factoryImages: initialFactoryImages,
-    materialsItems: initialMaterialsItems,
+    factoryImages: defaultFactoryImages,
+    materialsItems: defaultMaterialsItems,
     
     async fetchProducts() {
         this.loading = true;
@@ -196,31 +173,5 @@ const store = reactive({
         }
     }
 });
-
-if (typeof window !== 'undefined') {
-    watch(
-        () => store.factoryImages,
-        (val) => {
-            try {
-                window.localStorage.setItem('factoryImages', JSON.stringify(val));
-            } catch (e) {
-                
-            }
-        },
-        { deep: true }
-    );
-
-    watch(
-        () => store.materialsItems,
-        (val) => {
-            try {
-                window.localStorage.setItem('materialsItems', JSON.stringify(val));
-            } catch (e) {
-                
-            }
-        },
-        { deep: true }
-    );
-}
 
 export default store;

@@ -5,7 +5,10 @@ export default {
     template: `
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-900">Product Management</h1>
+                <div class="space-y-1">
+                    <h1 class="text-2xl font-bold text-gray-900">Product Management</h1>
+                    <p class="text-xs text-gray-500">Manage products and homepage visuals for shoes.</p>
+                </div>
                 <button @click="openForm()" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
                     Add Product
                 </button>
