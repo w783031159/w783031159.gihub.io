@@ -1,46 +1,10 @@
 import { reactive } from 'vue';
 
-const defaultFactoryImages = [
-    {
-        src: 'https://images.pexels.com/photos/4484078/pexels-photo-4484078.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        alt: 'Shoe factory production line'
-    },
-    {
-        src: 'https://images.pexels.com/photos/4484077/pexels-photo-4484077.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        alt: 'Quality inspection'
-    },
-    {
-        src: 'https://images.pexels.com/photos/3738087/pexels-photo-3738087.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        alt: 'Packing and shipping'
-    }
-];
+const defaultFactoryImages = [];
 
-const defaultMaterialsItems = [
-    {
-        image: 'https://images.pexels.com/photos/5045920/pexels-photo-5045920.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        alt: 'Upper materials',
-        label: 'Upper',
-        description: 'Mesh, knit, leather and more upper constructions for different design directions.'
-    },
-    {
-        image: 'https://images.pexels.com/photos/7480112/pexels-photo-7480112.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        alt: 'Outsole materials',
-        label: 'Outsole',
-        description: 'EVA, rubber and compound outsoles balancing durability, cushioning and lightness.'
-    },
-    {
-        image: 'https://images.pexels.com/photos/7439459/pexels-photo-7439459.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        alt: 'Paper shoe inserts',
-        label: 'Inserts',
-        description: 'Paper shoe inserts to improve presentation for e-commerce and in-store display.'
-    },
-    {
-        image: 'https://images.pexels.com/photos/3738086/pexels-photo-3738086.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        alt: 'Studded uppers',
-        label: 'Studded Uppers',
-        description: 'Studs and decorative uppers suitable for bold, statement-making women’s footwear.'
-    }
-];
+const defaultMaterialsItems = [];
+
+const defaultHomeCoverImage = '';
 
 const store = reactive({
     products: [],
@@ -49,6 +13,7 @@ const store = reactive({
     demoMode: false,
     factoryImages: defaultFactoryImages,
     materialsItems: defaultMaterialsItems,
+    homeCoverImage: defaultHomeCoverImage,
     
     async fetchProducts() {
         this.loading = true;
@@ -72,12 +37,15 @@ const store = reactive({
                     const productsArray = [];
                     let factoryItems = null;
                     let materialsItems = null;
+                    let homeCover = null;
 
                     for (const entry of data) {
                         if (entry && entry.type === 'factory' && Array.isArray(entry.items)) {
                             factoryItems = entry.items;
                         } else if (entry && entry.type === 'materials' && Array.isArray(entry.items)) {
                             materialsItems = entry.items;
+                        } else if (entry && entry.type === 'homeCover' && entry.image) {
+                            homeCover = entry.image;
                         } else {
                             productsArray.push(entry);
                         }
@@ -99,10 +67,12 @@ const store = reactive({
                     this.products = productsArray;
                     this.factoryImages = factoryItems && factoryItems.length > 0 ? factoryItems : defaultFactoryImages;
                     this.materialsItems = materialsItems && materialsItems.length > 0 ? materialsItems : defaultMaterialsItems;
+                    this.homeCoverImage = homeCover ? homeCover : defaultHomeCoverImage;
                 } else {
                     this.products = [];
                     this.factoryImages = defaultFactoryImages;
                     this.materialsItems = defaultMaterialsItems;
+                    this.homeCoverImage = defaultHomeCoverImage;
                 }
 
                 this.demoMode = useStatic;
@@ -206,7 +176,8 @@ const store = reactive({
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     factoryImages: this.factoryImages,
-                    materialsItems: this.materialsItems
+                    materialsItems: this.materialsItems,
+                    homeCoverImage: this.homeCoverImage
                 })
             });
             if (!res.ok) {

@@ -28,8 +28,11 @@ export default {
                         <tr v-for="product in store.products" :key="product.id">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10">
-                                        <img class="h-10 w-10 rounded-full object-cover" :src="product.images && product.images[0] ? product.images[0] : 'https://placehold.co/100'" alt="">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full overflow-hidden flex items-center justify-center">
+                                        <img v-if="product.images && product.images[0]" class="h-10 w-10 object-cover" :src="product.images[0]" alt="">
+                                        <svg v-else class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
@@ -61,6 +64,30 @@ export default {
                         >
                             保存工厂和材质
                         </button>
+                    </div>
+
+                    <div class="bg-white shadow sm:rounded-lg p-4 mb-8">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Home Cover Image</h3>
+                        <div class="space-y-4">
+                            <div class="aspect-[3/2] w-full max-w-md bg-gray-100 rounded overflow-hidden">
+                                <img :src="store.homeCoverImage" class="w-full h-full object-cover" alt="Home Cover">
+                            </div>
+                            <div class="flex flex-col space-y-2 max-w-md">
+                                <input
+                                    v-model="store.homeCoverImage"
+                                    type="text"
+                                    placeholder="Image URL or leave blank when using upload"
+                                    class="block w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
+                                >
+                                <div class="flex items-center space-x-2">
+                                    <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 cursor-pointer bg-white hover:bg-gray-50">
+                                        <span>Upload New Cover</span>
+                                        <input type="file" accept="image/*" class="sr-only" @change="onHomeCoverFileChange">
+                                    </label>
+                                    <span class="text-xs text-gray-500">Choose local image file</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -455,6 +482,20 @@ export default {
             event.target.value = '';
         };
 
+        const onHomeCoverFileChange = (event) => {
+            const files = event.target.files;
+            if (!files || !files[0]) return;
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target.result;
+                if (!result) return;
+                store.homeCoverImage = result;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        };
+
         return {
             store,
             showForm,
@@ -476,7 +517,8 @@ export default {
             addMaterialsItem,
             removeMaterialsItem,
             onFactoryFileChange,
-            onMaterialsFileChange
+            onMaterialsFileChange,
+            onHomeCoverFileChange
         };
     }
 }
